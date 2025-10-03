@@ -17,8 +17,10 @@
     "@orpc/tanstack-query": "^1.8.8",
     "@tailwindcss/vite": "^4.1.12",
     "@tanstack/react-query": "^5.85.5",
+    "bcrypt": "^6.0.0",
     "hono": "^4.9.4",
     "jsonrepair": "^3.13.0",
+    "jspdf": "^3.0.3",
     "openai": "^5.17.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -29,6 +31,7 @@
   "devDependencies": {
     "@eslint/js": "^10.0.0",
     "@hono/vite-dev-server": "^0.20.1",
+    "@types/bcrypt": "^6.0.0",
     "@types/node": "^22",
     "@types/react": "^19",
     "@types/react-dom": "^19",
