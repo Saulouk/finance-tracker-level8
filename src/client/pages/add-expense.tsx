@@ -7,7 +7,7 @@ interface AddExpensePageProps {
 export function AddExpensePage({ sessionId }: AddExpensePageProps) {
   return (
     <div>
-      <h1 className="text-2xl font-bold mb-6">Add Expense</h1>
+      <h1 className="text-2xl font-bold mb-6 dark:text-white">Add Expense</h1>
       <UploadForm sessionId={sessionId} />
     </div>
   );

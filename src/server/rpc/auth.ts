@@ -133,10 +133,65 @@ const listUsers = os.input(z.string()).handler(async ({ input: sessionId }) => {
   }));
 });
 
+const updateUser = os
+  .input(
+    z.object({
+      sessionId: z.string(),
+      userId: z.string(),
+      password: z.string().optional(),
+      isAdmin: z.boolean().optional(),
+    })
+  )
+  .handler(async ({ input }) => {
+    const session = await sessionsKV.getItem(input.sessionId);
+    if (!session?.isAdmin) {
+      throw new Error("Unauthorized");
+    }
+
+    const user = await usersKV.getItem(input.userId);
+    if (!user) {
+      throw new Error("User not found");
+    }
+
+    if (input.password) {
+      user.password = await bcrypt.hash(input.password, 10);
+    }
+
+    if (input.isAdmin !== undefined) {
+      user.isAdmin = input.isAdmin;
+    }
+
+    await usersKV.setItem(user.id, user);
+    return { success: true };
+  });
+
+const deleteUser = os
+  .input(
+    z.object({
+      sessionId: z.string(),
+      userId: z.string(),
+    })
+  )
+  .handler(async ({ input }) => {
+    const session = await sessionsKV.getItem(input.sessionId);
+    if (!session?.isAdmin) {
+      throw new Error("Unauthorized");
+    }
+
+    if (session.userId === input.userId) {
+      throw new Error("Cannot delete your own account");
+    }
+
+    await usersKV.removeItem(input.userId);
+    return { success: true };
+  });
+
 export const router = {
   login,
   logout,
   getCurrentUser,
   createUser,
   listUsers,
+  updateUser,
+  deleteUser,
 };

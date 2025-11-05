@@ -1,27 +1,8 @@
 import { call, os } from "@orpc/server";
 import { z } from "zod";
 import { randomUUID } from "crypto";
-import { createKV } from "@/server/lib/create-kv";
-
-const ExpenseSchema = z.object({
-  id: z.string(),
-  userId: z.string(),
-  username: z.string(),
-  date: z.string(),
-  amount: z.number(),
-  vat: z.number(),
-  category: z.string(),
-  purchaser: z.string(),
-  receiptPath: z.string().optional(),
-  isReimbursed: z.boolean(),
-  createdAt: z.string(),
-});
-
-type Expense = z.output<typeof ExpenseSchema>;
-
-const expensesKV = createKV<Expense>("expenses");
-
 import { sessionsKV } from "./auth-shared";
+import { expensesKV, ExpenseSchema, Expense } from "./expenses-shared";
 
 const create = os
   .input(
@@ -32,6 +13,7 @@ const create = os
       vat: z.number(),
       category: z.string(),
       purchaser: z.string(),
+      company: z.string(),
       receiptPath: z.string().optional(),
     })
   )
@@ -50,6 +32,7 @@ const create = os
       vat: input.vat,
       category: input.category,
       purchaser: input.purchaser,
+      company: input.company,
       receiptPath: input.receiptPath,
       isReimbursed: false,
       createdAt: new Date().toISOString(),
@@ -66,6 +49,8 @@ const list = os
       month: z.string().optional(),
       category: z.string().optional(),
       reimbursed: z.boolean().optional(),
+      dateFrom: z.string().optional(),
+      dateTo: z.string().optional(),
     })
   )
   .handler(async ({ input }) => {
@@ -83,6 +68,14 @@ const list = os
     if (input.month) {
       const monthStr = input.month;
       expenses = expenses.filter((e) => e.date.startsWith(monthStr));
+    }
+
+    if (input.dateFrom) {
+      expenses = expenses.filter((e) => e.date >= input.dateFrom!);
+    }
+
+    if (input.dateTo) {
+      expenses = expenses.filter((e) => e.date <= input.dateTo!);
     }
 
     if (input.category) {
@@ -107,6 +100,8 @@ const live = {
         month: z.string().optional(),
         category: z.string().optional(),
         reimbursed: z.boolean().optional(),
+        dateFrom: z.string().optional(),
+        dateTo: z.string().optional(),
       })
     )
     .handler(async function* ({ input, signal }) {
@@ -141,6 +136,62 @@ const markReimbursed = os
     return expense;
   });
 
+const updateExpense = os
+  .input(
+    z.object({
+      sessionId: z.string(),
+      expenseId: z.string(),
+      date: z.string(),
+      amount: z.number(),
+      vat: z.number(),
+      category: z.string(),
+      purchaser: z.string(),
+      company: z.string(),
+      receiptPath: z.string().optional(),
+    })
+  )
+  .handler(async ({ input }) => {
+    const session = await sessionsKV.getItem(input.sessionId);
+    if (!session) {
+      throw new Error("Unauthorized");
+    }
+
+    const expense = await expensesKV.getItem(input.expenseId);
+    if (!expense) {
+      throw new Error("Expense not found");
+    }
+
+    expense.date = input.date;
+    expense.amount = input.amount;
+    expense.vat = input.vat;
+    expense.category = input.category;
+    expense.purchaser = input.purchaser;
+    expense.company = input.company;
+    if (input.receiptPath) {
+      expense.receiptPath = input.receiptPath;
+    }
+
+    await expensesKV.setItem(expense.id, expense);
+    return expense;
+  });
+
+const deleteExpense = os
+  .input(
+    z.object({
+      sessionId: z.string(),
+      expenseId: z.string(),
+    })
+  )
+  .handler(async ({ input }) => {
+    const session = await sessionsKV.getItem(input.sessionId);
+    if (!session?.isAdmin) {
+      throw new Error("Unauthorized");
+    }
+
+    await expensesKV.removeItem(input.expenseId);
+    return { success: true };
+  });
+
 const getCategories = os.handler(async () => {
   const expenses = await expensesKV.getAllItems();
   const categories = [...new Set(expenses.map((e) => e.category))];
@@ -154,6 +205,8 @@ const exportCSV = os
       month: z.string().optional(),
       category: z.string().optional(),
       reimbursed: z.boolean().optional(),
+      dateFrom: z.string().optional(),
+      dateTo: z.string().optional(),
     })
   )
   .handler(async ({ input }) => {
@@ -167,6 +220,14 @@ const exportCSV = os
     if (input.month) {
       const monthStr = input.month;
       expenses = expenses.filter((e) => e.date.startsWith(monthStr));
+    }
+
+    if (input.dateFrom) {
+      expenses = expenses.filter((e) => e.date >= input.dateFrom!);
+    }
+
+    if (input.dateTo) {
+      expenses = expenses.filter((e) => e.date <= input.dateTo!);
     }
 
     if (input.category) {
@@ -188,6 +249,7 @@ const exportCSV = os
       "VAT",
       "Category",
       "Purchaser",
+      "Company",
       "User",
       "Reimbursed",
     ];
@@ -197,6 +259,7 @@ const exportCSV = os
       e.vat.toString(),
       e.category,
       e.purchaser,
+      e.company,
       e.username,
       e.isReimbursed ? "Yes" : "No",
     ]);
@@ -210,6 +273,8 @@ export const router = {
   list,
   live,
   markReimbursed,
+  updateExpense,
+  deleteExpense,
   getCategories,
   exportCSV,
 };

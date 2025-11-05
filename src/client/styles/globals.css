@@ -1,1 +1,9 @@
 @import "tailwindcss";
+
+@media (prefers-color-scheme: dark) {
+  @media not all {
+    .dark {
+      color-scheme: dark;
+    }
+  }
+}

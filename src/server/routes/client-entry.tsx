@@ -10,9 +10,12 @@ export function clientEntry(c: Context<BlankEnv>) {
       <head>
         <meta charSet="utf-8" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
-        <title>New Quest</title>
+        <title>Expense Tracker</title>
         {import.meta.env.PROD ? (
-          <script src="/static/main.js" type="module" />
+          <>
+            <script src="/static/main.js" type="module" />
+            <link rel="stylesheet" href="/static/main.css" />
+          </>
         ) : (
           <>
             <script
