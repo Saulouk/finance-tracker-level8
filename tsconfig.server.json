@@ -2,8 +2,8 @@
   "compilerOptions": {
     "module": "ESNext",
     "target": "ES2022",
-    "outDir": "./dist/server",
-    "rootDir": "./src/server",
+    "outDir": "./dist",
+    "rootDir": "./src",
     "moduleResolution": "bundler",
     "allowImportingTsExtensions": false,
     "esModuleInterop": true,
@@ -11,7 +11,7 @@
     "strict": true,
     "noEmit": false,
     "declaration": false,
-    "sourceMap": true,
+    "sourceMap": false,
     "jsx": "react-jsx",
     "jsxImportSource": "hono/jsx",
     "lib": ["ES2022"],
@@ -21,6 +21,6 @@
       "@/*": ["./src/*"]
     }
   },
-  "include": ["src/server/**/*", "src/client/vite-env.d.ts"],
-  "exclude": ["node_modules", "dist"]
+  "include": ["src/server/**/*"],
+  "exclude": ["node_modules", "dist", "src/client"]
 }

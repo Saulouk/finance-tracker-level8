@@ -3,10 +3,14 @@
   "private": true,
   "version": "0.0.0",
   "type": "module",
+  "_moduleAliases": {
+    "@": "./dist"
+  },
   "scripts": {
     "check:types": "tsc --noEmit",
     "dev": "vite",
-    "build": "pnpm build:server && pnpm build:client",
+    "build": "pnpm build:clean && pnpm build:server && pnpm build:client",
+    "build:clean": "rimraf dist",
     "build:server": "tsc -p tsconfig.server.json && tsc-alias -p tsconfig.server.json",
     "build:client": "vite build",
     "start": "NODE_ENV=production node dist/server/server.js",
@@ -25,6 +29,7 @@
     "hono": "^4.9.4",
     "jsonrepair": "^3.13.0",
     "jspdf": "^3.0.3",
+    "module-alias": "^2.2.3",
     "openai": "^5.17.0",
     "react": "^19.1.1",
     "react-dom": "^19.1.1",
@@ -45,6 +50,7 @@
     "eslint-plugin-react-hooks": "^6.0.0",
     "eslint-plugin-react-refresh": "^0.4.20",
     "globals": "^16.3.0",
+    "rimraf": "^6.1.0",
     "tsc-alias": "^1.8.16",
     "tsx": "^4.20.6",
     "typescript": "^5",
