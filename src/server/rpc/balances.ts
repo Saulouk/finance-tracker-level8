@@ -1,9 +1,9 @@
 import { os } from "@orpc/server";
 import { z } from "zod";
-import { createKV } from "@/server/lib/create-kv";
-import { sessionsKV } from "./auth-shared";
-import { incomeKV } from "./income-shared";
-import { expensesKV } from "./expenses-shared";
+import { createKV } from "@/server/lib/create-kv.js";
+import { sessionsKV } from "./auth-shared.js";
+import { incomeKV } from "./income-shared.js";
+import { expensesKV } from "./expenses-shared.js";
 
 const BalanceOverrideSchema = z.object({
   paymentType: z.string(),

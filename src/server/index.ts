@@ -15,4 +15,4 @@ app.route("/uploads", uploadsApp);
 app.route("/rpc", rpcApp);
 app.get("/*", clientEntry);
 
-export default app;app;
+export default app;

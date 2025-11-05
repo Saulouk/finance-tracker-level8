@@ -1,8 +1,8 @@
 import { call, os } from "@orpc/server";
 import { z } from "zod";
 import { randomUUID } from "crypto";
-import { sessionsKV } from "./auth-shared";
-import { incomeKV, PaymentMethodSchema, IncomeSchema, Income } from "./income-shared";
+import { sessionsKV } from "./auth-shared.js";
+import { incomeKV, PaymentMethodSchema, IncomeSchema, Income } from "./income-shared.js";
 
 const create = os
   .input(

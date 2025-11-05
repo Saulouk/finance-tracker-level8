@@ -2,7 +2,7 @@ import OpenAI from "openai";
 import { os } from "@orpc/server";
 import { z } from "zod";
 
-import { zodResponseFormat } from "@/server/lib/openai";
+import { zodResponseFormat } from "@/server/lib/openai.js";
 
 if (!process.env.OPENAI_BASE_URL) {
   throw new Error("OPENAI_BASE_URL is not set");

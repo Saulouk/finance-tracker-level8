@@ -1,6 +1,6 @@
 import { RPCHandler } from "@orpc/server/fetch";
 
-import { router } from "@/server/rpc";
+import { router } from "@/server/rpc/index.js";
 import { Hono } from "hono";
 
 export const rpcApp = new Hono();

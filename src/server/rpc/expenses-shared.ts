@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { createKV } from "@/server/lib/create-kv";
+import { createKV } from "@/server/lib/create-kv.js";
 
 export const ExpenseSchema = z.object({
   id: z.string(),

@@ -2,7 +2,7 @@ import { Hono } from "hono";
 import { writeFile, mkdir } from "fs/promises";
 import { join } from "path";
 import { randomUUID } from "crypto";
-import { sessionsKV } from "../rpc/auth-shared";
+import { sessionsKV } from "../rpc/auth-shared.js";
 
 const UPLOAD_DIR = "./.storage/uploads";
 

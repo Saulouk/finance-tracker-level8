@@ -2,8 +2,8 @@ import { call, os } from "@orpc/server";
 import { z } from "zod";
 import { randomUUID } from "crypto";
 import bcrypt from "bcrypt";
-import { createKV } from "@/server/lib/create-kv";
-import { sessionsKV, Session } from "./auth-shared";
+import { createKV } from "@/server/lib/create-kv.js";
+import { sessionsKV, Session } from "./auth-shared.js";
 
 const UserSchema = z.object({
   id: z.string(),
