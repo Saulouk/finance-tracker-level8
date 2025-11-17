@@ -1,4 +1,5 @@
-import "module-alias/register";
+import 'dotenv/config';
+import "module-alias/register.js";
 import { serve } from "@hono/node-server";
 import app from "./index.js";
 

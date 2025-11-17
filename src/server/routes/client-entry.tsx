@@ -11,7 +11,7 @@ export function clientEntry(c: Context<BlankEnv>) {
         <meta charSet="utf-8" />
         <meta content="width=device-width, initial-scale=1" name="viewport" />
         <title>Expense Tracker</title>
-        {import.meta.env.PROD ? (
+        {process.env.PROD === 'true' ? (
           <>
             <script src="/static/main.js" type="module" />
             <link rel="stylesheet" href="/static/main.css" />

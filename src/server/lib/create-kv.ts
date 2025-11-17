@@ -1,4 +1,5 @@
 import { createStorage, StorageValue, WatchEvent } from "unstorage";
+// @ts-ignore
 import fsDriver from "unstorage/drivers/fs";
 
 const STORAGE_PATH = "./.storage"; // It is .gitignored
